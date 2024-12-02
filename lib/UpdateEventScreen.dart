@@ -1,13 +1,37 @@
-import 'package:flutter/material.dart';
 import 'package:eventmanager/services/FirestoreService.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class EventManagerScreen extends StatefulWidget {
+class UpdateEventScreen extends StatefulWidget {
+  final String eventId;
+  final String currentTitle;
+  final String currentDescription;
+  final DateTime currentDate;
+  final String currentLocation;
+  final String currentEventType;
+  final String currentOrganizer;
+  final int currentCapacity;
+  final List<String> currentTags;
+  final String currentStatus;
+
+  UpdateEventScreen({
+    required this.eventId,
+    required this.currentTitle,
+    required this.currentDescription,
+    required this.currentDate,
+    required this.currentLocation,
+    required this.currentEventType,
+    required this.currentOrganizer,
+    required this.currentCapacity,
+    required this.currentTags,
+    required this.currentStatus,
+  });
+
   @override
-  _EventManagerScreenState createState() => _EventManagerScreenState();
+  _UpdateEventScreenState createState() => _UpdateEventScreenState();
 }
 
-class _EventManagerScreenState extends State<EventManagerScreen> {
+class _UpdateEventScreenState extends State<UpdateEventScreen> {
   final FirestoreService _firestoreService = FirestoreService();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
@@ -18,6 +42,20 @@ class _EventManagerScreenState extends State<EventManagerScreen> {
   final TextEditingController _tagsController = TextEditingController();
   final TextEditingController _statusController = TextEditingController();
   DateTime? _eventDate;
+
+  @override
+  void initState() {
+    super.initState();
+    _titleController.text = widget.currentTitle;
+    _descriptionController.text = widget.currentDescription;
+    _locationController.text = widget.currentLocation;
+    _eventTypeController.text = widget.currentEventType;
+    _organizerController.text = widget.currentOrganizer;
+    _capacityController.text = widget.currentCapacity.toString();
+    _tagsController.text = widget.currentTags.join(', ');
+    _statusController.text = widget.currentStatus;
+    _eventDate = widget.currentDate;
+  }
 
   // Date picker function
   Future<void> _selectDate(BuildContext context) async {
@@ -35,7 +73,7 @@ class _EventManagerScreenState extends State<EventManagerScreen> {
     }
   }
 
-  void _addEvent() async {
+  void _updateEvent() async {
     if (_titleController.text.trim().isEmpty ||
         _descriptionController.text.trim().isEmpty ||
         _locationController.text.trim().isEmpty ||
@@ -50,7 +88,8 @@ class _EventManagerScreenState extends State<EventManagerScreen> {
     }
 
     try {
-      await _firestoreService.addEvent(
+      await _firestoreService.updateEvent(
+        widget.eventId,
         _titleController.text,
         _descriptionController.text,
         _eventDate!,
@@ -61,7 +100,7 @@ class _EventManagerScreenState extends State<EventManagerScreen> {
         _tagsController.text.split(','),
         _statusController.text,
       );
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Event added successfully!')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Event updated successfully!')));
       Navigator.pop(context);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
@@ -71,7 +110,7 @@ class _EventManagerScreenState extends State<EventManagerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Add Event')),
+      appBar: AppBar(title: Text('Update Event')),
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
@@ -98,8 +137,8 @@ class _EventManagerScreenState extends State<EventManagerScreen> {
             ),
             SizedBox(height: 10),
             ElevatedButton(
-              onPressed: _addEvent,
-              child: Text('Add Event'),
+              onPressed: _updateEvent,
+              child: Text('Update Event'),
             ),
           ],
         ),
