@@ -1,3 +1,4 @@
+import 'package:eventmanager/AddEventScreen.dart';
 import 'package:eventmanager/EventManagerScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
             '/login': (_) => LoginPage(),
             '/signup': (_) => SignupScreen(),
             '/home': (_) => HomeScreen(),
-            '/add_event': (_) => EventManagerScreen(),
+            '/add_event': (_) => AddEventScreen(),
             // Removed separate route for Update EventScreen as it is navigated directly
           },
         );

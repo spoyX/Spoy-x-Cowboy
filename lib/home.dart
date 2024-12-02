@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eventmanager/AddEventScreen.dart';
 import 'package:eventmanager/UpdateEventScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:eventmanager/EventManagerScreen.dart';
@@ -23,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void _navigateToEventManager(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => EventManagerScreen()),
+      MaterialPageRoute(builder: (context) => AddEventScreen()),
     );
   }
 
