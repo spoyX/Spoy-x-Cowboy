@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:eventmanager/AddEventScreen.dart';
-import 'package:eventmanager/UpdateEventScreen.dart';
-import 'package:flutter/material.dart';
-import 'package:eventmanager/EventManagerScreen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:eventmanager/services/FirestoreService.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:eventmanager/EventDetailScreen.dart'; // Import the new screen
 import 'package:intl/intl.dart';
+
+import 'AddEventScreen.dart';
+import 'UpdateEventScreen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -47,11 +48,11 @@ class _HomeScreenState extends State<HomeScreen> {
           currentDescription: description,
           currentDate: date,
           currentLocation: location,
-          currentEventType: eventType,   // Add eventType
-          currentOrganizer: organizer,   // Add organizer
-          currentCapacity: capacity,     // Add capacity
-          currentTags: tags,             // Add tags
-          currentStatus: status,         // Add status
+          currentEventType: eventType,
+          currentOrganizer: organizer,
+          currentCapacity: capacity,
+          currentTags: tags,
+          currentStatus: status,
         ),
       ),
     );
@@ -64,83 +65,121 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('My Events'),
+        backgroundColor: Colors.grey[320],  // Dark gray color for AppBar
         actions: [
           IconButton(
-            icon: Icon(Icons.add),
+            icon: Icon(Icons.add, color: Colors.blueAccent),  // Accent blue color
             onPressed: () => _navigateToEventManager(context),
           ),
           IconButton(
-            icon: Icon(Icons.logout),
+            icon: Icon(Icons.logout, color: Colors.redAccent),  // Accent red color
             onPressed: () => _logout(context),
           ),
         ],
       ),
       body: user == null
           ? Center(child: CircularProgressIndicator())
-          : StreamBuilder<List<Map<String, dynamic>>>( // Add StreamBuilder
-              stream: _firestoreService.getEvents(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return Center(child: CircularProgressIndicator());
-                }
+          : StreamBuilder<List<Map<String, dynamic>>>(
+        stream: _firestoreService.getEvents(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Center(child: CircularProgressIndicator());
+          }
 
-                final events = snapshot.data!;
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ListView.builder(
-                    itemCount: events.length,
-                    itemBuilder: (context, index) {
-                      final event = events[index];
-                      final id = event['id'] ?? '';
-                      final title = event['title'] ?? '';
-                      final description = event['description'] ?? '';
-                      final date = (event['date'] as Timestamp).toDate();
-                      final location = event['location'] ?? '';
-                      final eventType = event['eventType'] ?? '';
-                      final organizer = event['organizer'] ?? '';
-                      final capacity = event['capacity'] ?? 0;
-                      final tags = List<String>.from(event['tags'] ?? []);
-                      final status = event['status'] ?? '';
+          final events = snapshot.data!;
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ListView.builder(
+              itemCount: events.length,
+              itemBuilder: (context, index) {
+                final event = events[index];
+                final id = event['id'] ?? '';
+                final title = event['title'] ?? '';
+                final description = event['description'] ?? '';
+                final date = (event['date'] as Timestamp).toDate();
+                final location = event['location'] ?? '';
+                final eventType = event['eventType'] ?? '';
+                final organizer = event['organizer'] ?? '';
+                final capacity = event['capacity'] ?? 0;
+                final tags = List<String>.from(event['tags'] ?? []);
+                final status = event['status'] ?? '';
 
-                      return Card(
-                        elevation: 4,
-                        margin: EdgeInsets.symmetric(vertical: 8),
-                        child: ListTile(
-                          contentPadding: EdgeInsets.all(16),
-                          title: Text(
-                            title,
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                          ),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(description),
-                              SizedBox(height: 4),
-                              Text('Location: $location'),
-                              SizedBox(height: 4),
-                              Text('Date: ${DateFormat('yyyy-MM-dd').format(date)}'),
-                            ],
-                          ),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                icon: Icon(Icons.edit, color: Colors.blue),
-                                onPressed: () => _updateEvent(id, title, description, date, location, eventType, organizer, capacity, tags, status),
-                              ),
-                              IconButton(
-                                icon: Icon(Icons.delete, color: Colors.red),
-                                onPressed: () => _deleteEvent(id),
-                              ),
-                            ],
-                          ),
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EventDetailScreen(
+                          title: title,
+                          description: description,
+                          date: date,
+                          location: location,
+                          eventType: eventType,
+                          organizer: organizer,
+                          capacity: capacity,
+                          tags: tags,
+                          status: status,
                         ),
-                      );
-                    },
+                      ),
+                    );
+                  },
+                  child: Card(
+                    color: Colors.grey[800],  // Dark gray for the cards
+                    elevation: 8,
+                    margin: EdgeInsets.symmetric(vertical: 8),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: ListTile(
+                      contentPadding: EdgeInsets.all(16),
+                      title: Text(
+                        title,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: Colors.white,  // White for the title
+                        ),
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            description,
+                            style: TextStyle(color: Colors.grey[300]),  // Light gray for description
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            'Location: $location',
+                            style: TextStyle(color: Colors.grey[400]),  // Slightly lighter gray
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            'Date: ${DateFormat('yyyy-MM-dd').format(date)}',
+                            style: TextStyle(color: Colors.grey[400]),  // Light gray date text
+                          ),
+                        ],
+                      ),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.edit, color: Colors.blueAccent),  // Accent blue for edit icon
+                            onPressed: () => _updateEvent(id, title, description, date, location, eventType, organizer, capacity, tags, status),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.delete, color: Colors.redAccent),  // Accent red for delete icon
+                            onPressed: () => _deleteEvent(id),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 );
               },
             ),
+          );
+        },
+      ),
     );
   }
 }

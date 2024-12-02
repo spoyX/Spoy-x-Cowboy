@@ -110,37 +110,191 @@ class _UpdateEventScreenState extends State<UpdateEventScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Update Event')),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(controller: _titleController, decoration: InputDecoration(labelText: 'Event Title')),
-            TextField(controller: _descriptionController, decoration: InputDecoration(labelText: 'Description')),
-            TextField(controller: _locationController, decoration: InputDecoration(labelText: 'Location')),
-            TextField(controller: _eventTypeController, decoration: InputDecoration(labelText: 'Event Type')),
-            TextField(controller: _organizerController, decoration: InputDecoration(labelText: 'Organizer')),
-            TextField(controller: _capacityController, decoration: InputDecoration(labelText: 'Capacity'), keyboardType: TextInputType.number),
-            TextField(controller: _tagsController, decoration: InputDecoration(labelText: 'Tags (comma separated)')),
-            TextField(controller: _statusController, decoration: InputDecoration(labelText: 'Status')),
-            SizedBox(height: 10),
-            GestureDetector(
-              onTap: () => _selectDate(context),
-              child: AbsorbPointer(
-                child: TextField(
+      appBar: AppBar(title: Text('Update Event'), backgroundColor: Colors.grey[600]), // Dark grey app bar
+      body: SingleChildScrollView(  // Wrap the entire body in a SingleChildScrollView
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [Colors.grey[300]!, Colors.grey[200]!], // Light grey gradient
+            ),
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                // Event Title
+                TextField(
+                  controller: _titleController,
+                  style: TextStyle(color: Colors.grey[800]),
                   decoration: InputDecoration(
-                    labelText: 'Event Date',
-                    hintText: _eventDate == null ? 'No date selected' : DateFormat('yyyy-MM-dd').format(_eventDate!),
+                    labelText: 'Event Title',
+                    labelStyle: TextStyle(color: Colors.grey[600]),
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                      borderSide: BorderSide(color: Colors.grey[400]!),
+                    ),
                   ),
                 ),
-              ),
+                SizedBox(height: 10),
+
+                // Description
+                TextField(
+                  controller: _descriptionController,
+                  style: TextStyle(color: Colors.grey[800]),
+                  decoration: InputDecoration(
+                    labelText: 'Description',
+                    labelStyle: TextStyle(color: Colors.grey[600]),
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                      borderSide: BorderSide(color: Colors.grey[400]!),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
+
+                // Location
+                TextField(
+                  controller: _locationController,
+                  style: TextStyle(color: Colors.grey[800]),
+                  decoration: InputDecoration(
+                    labelText: 'Location',
+                    labelStyle: TextStyle(color: Colors.grey[600]),
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                      borderSide: BorderSide(color: Colors.grey[400]!),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
+
+                // Event Type
+                TextField(
+                  controller: _eventTypeController,
+                  style: TextStyle(color: Colors.grey[800]),
+                  decoration: InputDecoration(
+                    labelText: 'Event Type',
+                    labelStyle: TextStyle(color: Colors.grey[600]),
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                      borderSide: BorderSide(color: Colors.grey[400]!),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
+
+                // Organizer
+                TextField(
+                  controller: _organizerController,
+                  style: TextStyle(color: Colors.grey[800]),
+                  decoration: InputDecoration(
+                    labelText: 'Organizer',
+                    labelStyle: TextStyle(color: Colors.grey[600]),
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                      borderSide: BorderSide(color: Colors.grey[400]!),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
+
+                // Capacity
+                TextField(
+                  controller: _capacityController,
+                  style: TextStyle(color: Colors.grey[800]),
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    labelText: 'Capacity',
+                    labelStyle: TextStyle(color: Colors.grey[600]),
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                      borderSide: BorderSide(color: Colors.grey[400]!),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
+
+                // Tags
+                TextField(
+                  controller: _tagsController,
+                  style: TextStyle(color: Colors.grey[800]),
+                  decoration: InputDecoration(
+                    labelText: 'Tags (comma separated)',
+                    labelStyle: TextStyle(color: Colors.grey[600]),
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                      borderSide: BorderSide(color: Colors.grey[400]!),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
+
+                // Status
+                TextField(
+                  controller: _statusController,
+                  style: TextStyle(color: Colors.grey[800]),
+                  decoration: InputDecoration(
+                    labelText: 'Status',
+                    labelStyle: TextStyle(color: Colors.grey[600]),
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                      borderSide: BorderSide(color: Colors.grey[400]!),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
+
+                // Date Picker
+                GestureDetector(
+                  onTap: () => _selectDate(context),
+                  child: AbsorbPointer(
+                    child: TextField(
+                      decoration: InputDecoration(
+                        labelText: 'Event Date',
+                        hintText: _eventDate == null ? 'No date selected' : DateFormat('yyyy-MM-dd').format(_eventDate!),
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                          borderSide: BorderSide(color: Colors.grey[400]!),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20),
+
+                // Update Event Button
+                ElevatedButton(
+                  onPressed: _updateEvent,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.grey[700], // Dark grey color for button
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                  child: Text('Update Event', style: TextStyle(color: Colors.white)),
+                ),
+              ],
             ),
-            SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: _updateEvent,
-              child: Text('Update Event'),
-            ),
-          ],
+          ),
         ),
       ),
     );
